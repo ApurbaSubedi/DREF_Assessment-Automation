@@ -27,11 +27,6 @@
                     await page.locator(`[name="${fieldName}"]`).click();
                 }
 
-                // ============================================================
-                // negAssert reads from whichever scenario is running
-                // positive has no negative_assertions key → all ifs skipped
-                // negative has negative_assertions key → ifs execute
-                // ============================================================
                 const negAssert = (data.operation_overview as any).negative_assertions;
 
                 // LOGIN - always uses positive data
@@ -54,10 +49,7 @@
                                     await clickRole('button',data.operation_overview.national_society);
                                     await expect(page.locator('[name="national_society"]')).toHaveValue(data.operation_overview.national_society);
 
-                            // ============================================================
-                            // 🆕 NEGATIVE ASSERTION 1 - National Society
-                            // Clear → assert error → re-fill → continue
-                            // ============================================================
+                            // NEGATIVE ASSERTION - National Society
                                     if (negAssert?.national_society_clear) {
                                     await page.getByRole('button', { name: 'Clear' }).nth(0).click();
                                     await expect(page.getByText('The field is required').nth(0)).toBeVisible();
@@ -66,7 +58,6 @@
                                     await clickRole('button', data.operation_overview.national_society);
                                     await expect(page.locator('[name="national_society"]')).toHaveValue(data.operation_overview.national_society);
                                     }
-                            // ============================================================
 
                                     await page.locator(`[placeholder="${data.operation_overview.placeholder}"]`).click();
                                     await clickRole('button',data.operation_overview.placeholder_value);
@@ -86,141 +77,128 @@
                                     await clickRole('button',data.operation_overview.sudden);
                                     await expect(page.locator('[name="type_of_onset"]')).toHaveValue(data.operation_overview.sudden);
 
-                            // // ============================================================
-                            // // 🆕 NEGATIVE ASSERTION 2 - Type of Onset
-                            // // Clear → assert error → re-select → continue
-                            // // ============================================================
-                            //         if (negAssert?.type_of_onset_clear) {
-                            //         await page.getByRole('button', { name: 'Clear' }).nth(3).click();
-                            //         await expect(page.getByText('The field is required').nth(0)).toBeVisible();
-                            //         await locatorClick('type_of_onset');
-                            //         await clickRole('button', data.operation_overview.sudden);
-                            //         await expect(page.locator('[name="type_of_onset"]')).toHaveValue(data.operation_overview.sudden);
-                            //         }
-                            // // ============================================================
+                            // NEGATIVE ASSERTION - Type of Onset
+                                    if (negAssert?.type_of_onset_clear) {
+                                    await page.getByRole('button', { name: 'Clear' }).nth(3).click();
+                                    await expect(page.getByText('The field is required').nth(0)).toBeVisible();
+                                    await locatorClick('type_of_onset');
+                                    await clickRole('button', data.operation_overview.sudden);
+                                    await expect(page.locator('[name="type_of_onset"]')).toHaveValue(data.operation_overview.sudden);
+                                    }
 
-                            //         await locatorClick('disaster_category');
-                            //         await clickRole('button',data.operation_overview.yellow);
-                            //         await expect(page.locator('[name="disaster_category"]')).toHaveValue("Yellow");
-                            //         await locatorClick('disaster_category');
-                            //         await clickRole('button',data.operation_overview.red);
-                            //         await expect(page.locator('[name="disaster_category"]')).toHaveValue(data.operation_overview.red);
-                            //         await expect(page.getByRole('heading',{name: data.operation_overview.crisis_categorization })).toBeVisible();
+                                    await locatorClick('disaster_category');
+                                    await clickRole('button',data.operation_overview.yellow);
+                                    await expect(page.locator('[name="disaster_category"]')).toHaveValue("Yellow");
+                                    await locatorClick('disaster_category');
+                                    await clickRole('button',data.operation_overview.red);
+                                    await expect(page.locator('[name="disaster_category"]')).toHaveValue(data.operation_overview.red);
+                                    await expect(page.getByRole('heading',{name: data.operation_overview.crisis_categorization })).toBeVisible();
 
-                            // //FILE UPLOAD
-                            //         const fileInput = page.locator('input[type="file"]').nth(0);
-                            //         await expect (fileInput).toBeEnabled();
-                            //         await fileInput.setInputFiles('C:\\Users\\appus\\Downloads\\earthquake.jpeg');
-                            //         await expect(page.locator('[name="country"]')).toHaveValue(data.operation_overview.nepal);                
-                            //         await locatorClick('district');
-                            //         await page.getByTitle('Select All').click();
-                            //         await page.getByText(data.operation_overview.affected_country).click();
-                            //         await expect(page.locator('[name="district"]')).toHaveValue(data.operation_overview.regions);
-                            //         await locatorFill('title', data.operation_overview.title);
-                            //         await expect(page.locator('[name="title"]')).toHaveValue(data.operation_overview.title);
+                            //FILE UPLOAD
+                                    const fileInput = page.locator('input[type="file"]').nth(0);
+                                    await expect (fileInput).toBeEnabled();
+                                    await fileInput.setInputFiles('C:\\Users\\appus\\Downloads\\earthquake.jpeg');
+                                    await expect(page.locator('[name="country"]')).toHaveValue(data.operation_overview.nepal);                
+                                    await locatorClick('district');
+                                    await page.getByTitle('Select All').click();
+                                    await page.getByText(data.operation_overview.affected_country).click();
+                                    await expect(page.locator('[name="district"]')).toHaveValue(data.operation_overview.regions);
+                                    await locatorFill('title', data.operation_overview.title);
+                                    await expect(page.locator('[name="title"]')).toHaveValue(data.operation_overview.title);
 
-                            // // ============================================================
-                            // // 🆕 NEGATIVE ASSERTION 3 - Title
-                            // // Fill spaces → assert error → re-fill correct value → continue
-                            // // ============================================================
-                            //         if (negAssert?.title_empty) {
-                            //         await locatorFill('title', '   ');
-                            //         await expect(page.getByText('The field is required').nth(0)).toBeVisible();
-                            //         await locatorFill('title', data.operation_overview.title);
-                            //         await expect(page.locator('[name="title"]')).toHaveValue(data.operation_overview.title);
-                            //         }
-                            // // ============================================================
+                            // NEGATIVE ASSERTION - Title
+                                    if (negAssert?.title_empty) {
+                                    await locatorFill('title', '   ');
+                                    await expect(page.getByText('The field is required').nth(0)).toBeVisible();
+                                    await locatorFill('title', data.operation_overview.title);
+                                    await expect(page.locator('[name="title"]')).toHaveValue(data.operation_overview.title);
+                                    }
 
-                            //         await page.getByText(data.operation_overview.no, { exact: true }).click();
-                            //         await page.getByText(data.operation_overview.yes, { exact: true }).click();
+                                    await page.getByText(data.operation_overview.no, { exact: true }).click();
+                                    await page.getByText(data.operation_overview.yes, { exact: true }).click();
 
-                            // // File Upload
-                            //         const fileInput1 = page.locator('input[type="file"]').nth(1);
-                            //         await expect (fileInput1).toBeEnabled();
-                            //         await fileInput1.setInputFiles("C:\\Users\\appus\\Downloads\\earthquake.jpeg");
-                            //         await page.locator('[name="caption"]').nth(0).fill(data.operation_overview.caption);
-                            //         await expect(page.locator('[name="caption"]').nth(0)).toHaveValue(data.operation_overview.caption);
+                            // File Upload
+                                    const fileInput1 = page.locator('input[type="file"]').nth(1);
+                                    await expect (fileInput1).toBeEnabled();
+                                    await fileInput1.setInputFiles("C:\\Users\\appus\\Downloads\\earthquake.jpeg");
+                                    await page.locator('[name="caption"]').nth(0).fill(data.operation_overview.caption);
+                                    await expect(page.locator('[name="caption"]').nth(0)).toHaveValue(data.operation_overview.caption);
 
-                            // //File Upload
-                            //         const fileInput2 = page.locator('input[type="file"]').nth(2);
-                            //         await expect (fileInput2).toBeEnabled();
-                            //         await fileInput2.setInputFiles("C:\\Users\\appus\\Downloads\\earthquake.jpeg");
-                            //         await page.locator('[name="caption"]').nth(1).fill(data.operation_overview.caption);
-                            //         await expect(page.locator('[name="caption"]').nth(1)).toHaveValue(data.operation_overview.caption);
+                            //File Upload
+                                    const fileInput2 = page.locator('input[type="file"]').nth(2);
+                                    await expect (fileInput2).toBeEnabled();
+                                    await fileInput2.setInputFiles("C:\\Users\\appus\\Downloads\\earthquake.jpeg");
+                                    await page.locator('[name="caption"]').nth(1).fill(data.operation_overview.caption);
+                                    await expect(page.locator('[name="caption"]').nth(1)).toHaveValue(data.operation_overview.caption);
                                     await clickRole('button', data.operation.continue);  
 
-                // EVENT DETAIL SECTION
-                await locatorClick('event_date');
-                await locatorFill('event_date', data.event_detail.date1);
-                await expect(page.locator('[name="event_date"]')).toHaveValue(data.event_detail.date1);
-                await locatorFill('num_affected', data.event_detail.num_affected);
-                await expect(page.locator('[name="num_affected"]')).toHaveValue(data.event_detail.num_affected);
+                            // EVENT DETAIL SECTION
+                                    await locatorClick('event_date');
+                                    await locatorFill('event_date', data.event_detail.date1);
+                                    await expect(page.locator('[name="event_date"]')).toHaveValue(data.event_detail.date1);
+                                    await locatorFill('num_affected', data.event_detail.num_affected);
+                                    await expect(page.locator('[name="num_affected"]')).toHaveValue(data.event_detail.num_affected);
 
-                // ============================================================
-                // 🆕 NEGATIVE ASSERTION 4 - num_affected
-                // Fill -5 → assert error → re-fill correct value → continue
-                // ============================================================
-                if ((data.event_detail as any).negative_assertions?.num_affected_negative) {
-                    await locatorFill('num_affected', '-5');
-                    await expect(page.getByText('The field must be a positive number without decimal').nth(0)).toBeVisible();
-                    await page.pause();
-                    await locatorFill('num_affected', data.event_detail.num_affected);
-                    await expect(page.locator('[name="num_affected"]')).toHaveValue(data.event_detail.num_affected);
-                }
-                
-                // ============================================================
-
-                await locatorFill('people_in_need', data.event_detail.people_in_need);
-                await expect(page.locator('[name="people_in_need"]')).toHaveValue(data.event_detail.people_in_need);
-                await locatorFill('estimated_number_of_affected_male', data.event_detail.estimated_number_of_affected_male);
-                await expect(page.locator('[name="estimated_number_of_affected_male"]')).toHaveValue(data.event_detail.estimated_number_of_affected_male);
-                await locatorFill('estimated_number_of_affected_female', data.event_detail.estimated_number_of_affected_female);
-                await expect(page.locator('[name="estimated_number_of_affected_female"]')).toHaveValue(data.event_detail.estimated_number_of_affected_female);
-                await locatorFill('estimated_number_of_affected_girls_under_18', data.event_detail.estimated_number_of_affected_girls_under_18);
-                await expect(page.locator('[name="estimated_number_of_affected_girls_under_18"]')).toHaveValue(data.event_detail.estimated_number_of_affected_girls_under_18);
-                await locatorFill('estimated_number_of_affected_boys_under_18', data.event_detail.estimated_number_of_affected_boys_under_18);
-                await expect(page.locator('[name="estimated_number_of_affected_boys_under_18"]')).toHaveValue(data.event_detail.estimated_number_of_affected_boys_under_18);
-                await locatorFill('event_description', data.event_detail.test_description);
-                await expect(page.locator('[name="event_description"]')).toHaveValue(data.event_detail.test_description);
-                await clickRole('button', data.event_detail.new_source);
-                await locatorFill('source_name', data.event_detail.test_description);
-                await locatorFill('source_link', data.event_detail.test_link);
-                await clickRole('button', data.event_detail.new_source);
-                await page.locator('[name="source_name"]').nth(1).fill(data.event_detail.test_description);
-                await page.locator('[name="source_link"]').nth(1).fill(data.event_detail.test_link);
-                await clickRole('button', data.event_detail.new_source);
-                await page.locator('[name="source_name"]').nth(2).fill(data.event_detail.test_description);
-                await page.locator('[name="source_link"]').nth(2).fill(data.event_detail.test_link);
-                await page.getByRole('button', { name: data.event_detail.delete_source }).nth(2).click();
-                await page.getByRole('button', { name: data.event_detail.delete_source }).nth(1).click();
+                            // NEGATIVE ASSERTION - num_affected
+                                    if ((data.event_detail as any).negative_assertions?.num_affected_negative) {
+                                        await locatorFill('num_affected', '-5');
+                                        await expect(page.getByText('The field must be a positive number without decimal').nth(0)).toBeVisible();
+                                        await page.pause();
+                                        await locatorFill('num_affected', data.event_detail.num_affected);
+                                        await expect(page.locator('[name="num_affected"]')).toHaveValue(data.event_detail.num_affected);
+                                    }
+                                    
+                                    await locatorFill('people_in_need', data.event_detail.people_in_need);
+                                    await expect(page.locator('[name="people_in_need"]')).toHaveValue(data.event_detail.people_in_need);
+                                    await locatorFill('estimated_number_of_affected_male', data.event_detail.estimated_number_of_affected_male);
+                                    await expect(page.locator('[name="estimated_number_of_affected_male"]')).toHaveValue(data.event_detail.estimated_number_of_affected_male);
+                                    await locatorFill('estimated_number_of_affected_female', data.event_detail.estimated_number_of_affected_female);
+                                    await expect(page.locator('[name="estimated_number_of_affected_female"]')).toHaveValue(data.event_detail.estimated_number_of_affected_female);
+                                    await locatorFill('estimated_number_of_affected_girls_under_18', data.event_detail.estimated_number_of_affected_girls_under_18);
+                                    await expect(page.locator('[name="estimated_number_of_affected_girls_under_18"]')).toHaveValue(data.event_detail.estimated_number_of_affected_girls_under_18);
+                                    await locatorFill('estimated_number_of_affected_boys_under_18', data.event_detail.estimated_number_of_affected_boys_under_18);
+                                    await expect(page.locator('[name="estimated_number_of_affected_boys_under_18"]')).toHaveValue(data.event_detail.estimated_number_of_affected_boys_under_18);
+                                    await locatorFill('event_description', data.event_detail.test_description);
+                                    await expect(page.locator('[name="event_description"]')).toHaveValue(data.event_detail.test_description);
+                                    await clickRole('button', data.event_detail.new_source);
+                                    await locatorFill('source_name', data.event_detail.test_description);
+                                    await locatorFill('source_link', data.event_detail.test_link);
+                                    await clickRole('button', data.event_detail.new_source);
+                                    await page.locator('[name="source_name"]').nth(1).fill(data.event_detail.test_description);
+                                    await page.locator('[name="source_link"]').nth(1).fill(data.event_detail.test_link);
+                                    await clickRole('button', data.event_detail.new_source);
+                                    await page.locator('[name="source_name"]').nth(2).fill(data.event_detail.test_description);
+                                    await page.locator('[name="source_link"]').nth(2).fill(data.event_detail.test_link);
+                                    await page.getByRole('button', { name: data.event_detail.delete_source }).nth(2).click();
+                                    await page.getByRole('button', { name: data.event_detail.delete_source }).nth(1).click();
 
 
-                await expect(page.locator('[name="source_name"]')).toHaveValue(data.event_detail.test_description);
-                //negative assertoions
-                        await page.locator('[name="source_name"]').clear();
-                await expect(page.getByText('The field is required').nth(0)).toBeVisible();
-                
-                await expect(page.locator('[name="source_link"]')).toHaveValue(data.event_detail.test_link);
-                        await page.locator('[name="source_link"]').clear();
-                        await locatorFill('source_link', 'not a url');
+                                    await expect(page.locator('[name="source_name"]')).toHaveValue(data.event_detail.test_description);
+                                    //negative assertoions
+                                    await page.locator('[name="source_name"]').clear();
+                                    await expect(page.getByText('The field is required').nth(0)).toBeVisible();
+                                    
+                                    await expect(page.locator('[name="source_link"]')).toHaveValue(data.event_detail.test_link);
+                                    await page.locator('[name="source_link"]').clear();
+                                    await locatorFill('source_link', 'not a url');
 
-                    await expect(page.getByText('The field must be a valid url').nth(0)).toBeVisible();
+                                    await expect(page.getByText('The field must be a valid url').nth(0)).toBeVisible();
                 
 
-                // // File Upload - Event Detail
-                // const fileInput_ED = page.locator('input[type="file"]');
-                // await expect(fileInput_ED).toBeEnabled();
-                // await fileInput_ED.setInputFiles("C:\\Users\\appus\\Downloads\\earthquake.jpeg");
-                // await locatorFill('0', data.operation_overview.caption);
+                                    // File Upload - Event Detail
+                                    const fileInput_ED = page.locator('input[type="file"]');
+                                    await expect(fileInput_ED).toBeEnabled();
+                                    await fileInput_ED.setInputFiles("C:\\Users\\appus\\Downloads\\earthquake.jpeg");
+                                    await locatorFill('0', data.operation_overview.caption);
 
-                // // File Upload - Event Detail 2
-                // const fileInput_ED1 = page.locator('input[type="file"]');
-                // await expect(fileInput_ED1).toBeEnabled();
-                // await fileInput_ED1.setInputFiles("C:\\Users\\appus\\Downloads\\earthquake.jpeg");
-                // await locatorFill('1', data.operation_overview.caption);
-                // await page.getByRole('button', { name: data.event_detail.remove }).nth(1).click();
-                // await expect(page.locator('[name="0"]')).toHaveValue(data.operation_overview.caption);
-                // await clickRole('button', data.operation.continue);
+                                    // File Upload - Event Detail 
+                                    const fileInput_ED1 = page.locator('input[type="file"]');
+                                    await expect(fileInput_ED1).toBeEnabled();
+                                    await fileInput_ED1.setInputFiles("C:\\Users\\appus\\Downloads\\earthquake.jpeg");
+                                    await locatorFill('1', data.operation_overview.caption);
+                                    await page.getByRole('button', { name: data.event_detail.remove }).nth(1).click();
+                                    await expect(page.locator('[name="0"]')).toHaveValue(data.operation_overview.caption);
+                                    await clickRole('button', data.operation.continue);
 
             });
         }

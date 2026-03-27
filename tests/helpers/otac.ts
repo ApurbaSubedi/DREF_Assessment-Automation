@@ -92,6 +92,8 @@
                                 }
                                 await locatorFill('national_society_hotline_phone_number', testData.otac.national_society_hotline_phone_number);
                                 await expect(page.locator('[name="national_society_hotline_phone_number"]')).toHaveValue(testData.otac.national_society_hotline_phone_number);
+                                // await page.getByRole('button', { name:testData.otac.save }).nth(1).click();
+                                
 
                                 if (negAssert?.neg_flag) {
                                 await page.getByRole('button', { name:testData.otac.save }).nth(1).click();
